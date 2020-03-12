@@ -1,0 +1,28 @@
+---
+kubernetes_master_ports:
+  tcp:
+    - 6443
+    - 2379-2380
+    - 10250
+    - 10251
+    - 10252
+
+kubernetes_repo_url: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+kubernetes_repo_gpg: ['https://packages.cloud.google.com/yum/doc/yum-key.gpg', 'https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg']
+kubernetes_packages:
+  - kubelet-1.17*
+  - kubeadm-1.17*
+  - kubectl-1.17*
+kubelet_extra_args:
+  - None
+
+kubeadm_extra_users:
+  - test
+
+kubeadm_init_args:
+  control-plane-endpoint:
+  pod-network-cidr: 10.217.0.0/16
+  cri-socket:
+  apiserver-advertise-address:
+
+pod_network_type: cilium

@@ -1,0 +1,5 @@
+---
+- name: Restart kubelet service CentOS
+  service:
+    name: kubelet
+    state: restarted

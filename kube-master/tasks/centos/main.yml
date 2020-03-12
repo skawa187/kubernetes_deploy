@@ -1,0 +1,11 @@
+- name: os is {{ ansible_distribution }}
+  debug: 
+    msg: asd {{ ansible_distribution }}
+
+- name: Run kubeadm installation tasks
+  include_tasks: kubeadm.yml
+  tags: install, kubeadm
+
+- name: Initialize master node
+  include_tasks: init-master.yml
+  tags: init, master

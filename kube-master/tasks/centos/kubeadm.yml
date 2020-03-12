@@ -1,0 +1,42 @@
+
+- debug:
+    var: kubernetes_master_ports.tcp
+
+# - name: Ensure open ports
+#   firewalld:
+#     port: "{{ item }}/tcp"
+#     permanent: yes
+#     state: enabled
+#   loop: "{{ kubernetes_master_ports.tcp }}"
+
+# - name: Add kubernetes repo
+#   yum_repository:
+#     name: Kubernetes
+#     description: Kubernetes repository
+#     baseurl: "{{ kubernetes_repo_url }}"
+#     gpgkey: "{{ kubernetes_repo_gpg }}"
+#     gpgcheck: yes
+#     state: present
+
+# - name: Set SELinux to permissive mode
+#   selinux:
+#     state: disabled
+
+# - name: Install kubernetes packages
+#   yum:
+#     name: "{{ kubernetes_packages }}"
+#     state: present
+
+# - name: Enable kubelet service
+#   service:
+#     name: kubelet
+#     enabled: yes
+#     args: --now
+#   notify: Restart kubelet service CentOS
+
+# - name: Load br_netfilter module
+#   modprobe:
+#     name: br_netfilter
+#     state: present
+
+# TODO modify /etc/sysconfig/kubelet for extra args

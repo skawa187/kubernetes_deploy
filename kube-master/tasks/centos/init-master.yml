@@ -1,0 +1,24 @@
+
+# - debug:
+#     msg: >
+#     "kubeadm init {% for arg in kubeadm_init_args|dict2items %}
+#     {% if arg.value %}--{{ arg.key }}={{ arg.value }} {% endif %}
+#     {% endfor %}"
+
+- name: Run kubeadm init command
+  command: >
+      kubeadm init {% for arg in kubeadm_init_args|dict2items %}
+      {% if arg.value %}--{{ arg.key }}={{ arg.value }} {% endif %}
+      {% endfor %}
+  args:
+    creates: /etc/passwd
+  async: 3000
+  poll: 5
+  register: kubeadm_init_result
+
+- name: Wait for kubeadm
+  async_status:
+    jid: '{{ kubeadm_init_result.ansible_job_id }}'
+  register: job_result
+  until: job_result.finished
+  retries: 10
