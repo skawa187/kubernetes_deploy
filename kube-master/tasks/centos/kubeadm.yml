@@ -1,8 +1,5 @@
-
-- debug:
-    var: kubernetes_master_ports.tcp
-
-# - name: Ensure open ports
+---
+# - name: Ensure opened ports
 #   firewalld:
 #     port: "{{ item }}/tcp"
 #     permanent: yes
@@ -39,4 +36,16 @@
 #     name: br_netfilter
 #     state: present
 
-# TODO modify /etc/sysconfig/kubelet for extra args
+- name: Ensure net.bridge.bridge-nf-call-iptables is set to 1
+  lineinfile:
+    path: /etc/sysctl.d/k8s.conf
+    regexp: "{{ item[0] }}"
+    line: "{{ item[1] }}"
+  register: lineinfile_result
+  loop:
+    - ['^net\.bridge\.bridge-nf-call-ip6tables', 'net.bridge.bridge-nf-call-ip6tables = 1']
+    - ['^net\.bridge\.bridge-nf-call-iptables', 'net.bridge.bridge-nf-call-iptables = 1']
+
+- name: Run sysctl --system command - reload config
+  command: sysctl --system
+  when: lineinfile_result.changed

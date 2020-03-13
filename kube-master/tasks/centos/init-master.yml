@@ -1,24 +1,28 @@
+---
+- block:
+  - name: Run kubeadm init command
+    command: >
+        kubeadm init {% for arg in kubeadm_init_args|dict2items %}
+        {% if arg.value %}--{{ arg.key }}={{ arg.value }} {% endif %}
+        {% endfor %}
+    args:
+      creates: /etc/kubernetes/admin.conf
+    async: 5000
+    poll: 2
+    register: kubeadm_init_result
 
-# - debug:
-#     msg: >
-#     "kubeadm init {% for arg in kubeadm_init_args|dict2items %}
-#     {% if arg.value %}--{{ arg.key }}={{ arg.value }} {% endif %}
-#     {% endfor %}"
+  - name: Wait for kubeadm
+    async_status:
+      jid: "{{ kubeadm_init_result.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
 
-- name: Run kubeadm init command
-  command: >
-      kubeadm init {% for arg in kubeadm_init_args|dict2items %}
-      {% if arg.value %}--{{ arg.key }}={{ arg.value }} {% endif %}
-      {% endfor %}
-  args:
-    creates: /etc/passwd
-  async: 3000
-  poll: 5
-  register: kubeadm_init_result
+  - local_action: copy content="{{ job_result.stdout_lines[-2:]|join(' ') }}" dest=./kubeadm_init_stdout_{{ ansible_hostname }} mode=0644
+    when: job_result.changed
 
-- name: Wait for kubeadm
-  async_status:
-    jid: '{{ kubeadm_init_result.ansible_job_id }}'
-  register: job_result
-  until: job_result.finished
-  retries: 10
+  - name: Save stdout in facts
+    set_fact:
+      kubeadm_init_stdout: "{{ job_result.stdout_lines[-5:] }}"
+      cacheable: yes
+    when: job_result.changed
+  tags: install, init

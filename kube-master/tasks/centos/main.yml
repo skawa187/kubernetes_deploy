@@ -1,6 +1,6 @@
-- name: os is {{ ansible_distribution }}
-  debug: 
-    msg: asd {{ ansible_distribution }}
+---
+- debug: 
+    msg: distribution is {{ ansible_distribution }}
 
 - name: Run kubeadm installation tasks
   include_tasks: kubeadm.yml
@@ -9,3 +9,14 @@
 - name: Initialize master node
   include_tasks: init-master.yml
   tags: init, master
+
+- name: Setup extra users for access
+  include_tasks: setup-users.yml
+  loop: "{{ kubeadm_extra_users }}"
+  loop_control:
+    loop_var: user
+  tags: config, users
+
+- name: Setup pod network
+  include_tasks: pod-network-{{ pod_network_type }}.yml
+  tags: install, network

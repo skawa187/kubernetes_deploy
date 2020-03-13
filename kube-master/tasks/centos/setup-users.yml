@@ -1,0 +1,35 @@
+---
+- name: Check for user {{ user }}
+  command: id {{ user }}
+  register: id_result
+  ignore_errors: yes
+  changed_when: no
+  tags: config
+
+- name: Check for config file
+  command: ls ~{{ user }}/.kube/config
+  register: ls_result
+  ignore_errors: yes
+  changed_when: no
+  when: id_result.rc == 0
+  tags: config
+
+- block:
+  - name: Create directory if missing
+    file:
+      path: ~{{ user }}/.kube
+      state: directory
+      owner: "{{ user }}"
+
+  - name: Copy config
+    copy:
+      dest: ~{{ user }}/.kube/config
+      src: /etc/kubernetes/admin.conf
+      owner: "{{ user }}"
+      mode: 0600
+      remote_src: yes
+    delegate_to: localhost
+  when: 
+    - id_result.rc == 0
+    - ls_result.rc != 0
+  tags: config

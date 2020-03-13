@@ -1,4 +1,5 @@
 ---
+# Ports to be unlocked for kurbernetes services
 kubernetes_master_ports:
   tcp:
     - 6443
@@ -7,17 +8,21 @@ kubernetes_master_ports:
     - 10251
     - 10252
 
+# Repo creation vars
 kubernetes_repo_url: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
 kubernetes_repo_gpg: ['https://packages.cloud.google.com/yum/doc/yum-key.gpg', 'https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg']
 kubernetes_packages:
   - kubelet-1.17*
   - kubeadm-1.17*
   - kubectl-1.17*
+
 kubelet_extra_args:
   - None
 
+# Create /.kube/config files for these users 
 kubeadm_extra_users:
   - test
+  - root
 
 kubeadm_init_args:
   control-plane-endpoint:
@@ -26,3 +31,4 @@ kubeadm_init_args:
   apiserver-advertise-address:
 
 pod_network_type: cilium
+cilium_remote_url: https://raw.githubusercontent.com/cilium/cilium/v1.6/install/kubernetes/quick-install.yaml

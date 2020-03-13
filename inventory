@@ -1,0 +1,7 @@
+localhost
+
+[master-nodes]
+my-master-node.ex.com
+
+[worker-nodes]
+my-worker-node.ex.com
