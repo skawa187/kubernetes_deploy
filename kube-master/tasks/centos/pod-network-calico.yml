@@ -1,0 +1,15 @@
+---
+- name: Get network pods
+  command: kubectl get pods --all-namespaces
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  changed_when: no
+  ignore_errors: yes
+  register: cmd_result
+
+- name: Deploy network
+  command: kubectl create -f {{ pod_network_remote_url }}
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  when: ('calico' not in cmd_result.stdout)
+  tags: install, network

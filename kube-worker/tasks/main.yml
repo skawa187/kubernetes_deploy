@@ -1,0 +1,12 @@
+---
+- name: Include kubeadm installation task
+  include_role:
+    name: kube-master
+    tasks_from: "{{ ansible_distribution|lower }}/kubeadm"
+  vars:
+    kubernetes_master_ports: "{{ kubernetes_worker_ports }}"
+  tags: install, config
+
+- name: Import kubeadm join tasks
+  import_tasks: kubeadm-join.yml
+  tags: config, join

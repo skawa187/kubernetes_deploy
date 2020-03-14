@@ -26,9 +26,9 @@ kubeadm_extra_users:
 
 kubeadm_init_args:
   control-plane-endpoint:
-  pod-network-cidr: 10.217.0.0/16
+  pod-network-cidr: 192.168.0.0/16
   cri-socket:
-  apiserver-advertise-address:
+  apiserver-advertise-address: '192.168.2.2'  # expose API to this address
 
-pod_network_type: cilium
-cilium_remote_url: https://raw.githubusercontent.com/cilium/cilium/v1.6/install/kubernetes/quick-install.yaml
+pod_network_type: calico
+pod_network_remote_url: https://docs.projectcalico.org/v3.11/manifests/calico.yaml

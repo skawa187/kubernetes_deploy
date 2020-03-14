@@ -1,7 +1,14 @@
 ---
-- hosts: localhost
+- hosts: master-nodes
   become_user: root
   gather_facts: yes
   become: yes
   roles:
     - kube-master
+
+- hosts: worker-nodes
+  become_user: root
+  gather_facts: yes
+  become: yes
+  roles:
+    - kube-worker

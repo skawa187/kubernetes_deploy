@@ -1,5 +1,2 @@
-kubernetes-master
+kube-master Role
 =========
-
-A brief description of the role goes here.
-

@@ -17,7 +17,7 @@
     register: job_result
     until: job_result.finished
 
-  - local_action: copy content="{{ job_result.stdout_lines[-2:]|join(' ') }}" dest=./kubeadm_init_stdout_{{ ansible_hostname }} mode=0644
+  - local_action: copy content="{{ job_result.stdout_lines[-2:]|join(' ') }}" dest=./kubeadm_join_cmd mode=0644
     when: job_result.changed
 
   - name: Save stdout in facts

@@ -1,0 +1,7 @@
+---
+kubernetes_worker_ports:
+  tcp:
+    - 10250
+    - 30000-32767
+
+join_command_file: ./kubeadm_init_stdout
